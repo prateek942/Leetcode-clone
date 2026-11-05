@@ -20,7 +20,7 @@ const SignInPage = () => {
     try {
       
       setLoading(true);
-      const res = await axios.post("../api/auth/signIn",{
+      const res = await axios.post("/api/auth/signIn",{
         email: email,
         password: password
       })
@@ -49,58 +49,42 @@ const SignInPage = () => {
   }
 
   return (
-    <div>
-      <Navbar colour={""} hoverColour={"gray-900"}/>
-
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gray-300">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm p-10 bg-white">
-          <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-
+    <div className="min-h-screen bg-zinc-950">
+      <Navbar />
+      <div className="flex justify-center px-4 py-16 sm:py-24">
+        <div className="w-full max-w-sm">
+          <div className="text-center">
             <Image className="mx-auto h-10 w-auto" src={Logo} alt="Logo" />
-            <h2 className="mt-10 pb-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">LeetCode</h2>
-            <form className="space-y-6" onSubmit={onSignin}>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-400">Email address</label>
-                <div className="mt-2">
-                  <input id="email" name="email" type="email" autoComplete="email" required className="block w-full rounded-md p-2 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black hover:ring-black sm:text-sm sm:leading-6 transform ease-out duration-700"
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between">
-                  <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-400">Password</label>
-                  <div className="text-sm">
-                    <Link href="#" className="font-semibold text-gray-500 hover:text-black transform ease-out duration-700">Forgot password?</Link>
-                  </div>
-                </div>
-                <div className="mt-2">
-                  <input id="password" name="password" type="password" autoComplete="current-password" required className="block w-full rounded-md p-2 border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black hover:ring-black sm:text-sm sm:leading-6 transform ease-out duration-700"
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }} />
-                </div>
-              </div>
-
-              <div>
-                <button type="submit" className="flex w-full justify-center rounded-md bg-gradient-to-r from-slate-500 to-gray-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:from-slate-600 hover:to-zinc-800">
-                {loading? "Loading...": "Sign In Here"}
-                </button>
-              </div>
-            </form>
-
-            <p className="mt-10 text-center text-sm text-gray-400">
-              Create Your Account &nbsp;
-              <Link href="/accounts/signUp" className="font-semibold leading-6 text-gray-500 hover:text-black">SignUp</Link>
-            </p>
+            <h2 className="mt-6 text-2xl font-semibold tracking-tight text-white">Welcome back</h2>
+            <p className="mt-2 text-sm text-zinc-400">Sign in to continue solving problems.</p>
           </div>
 
+          <form className="card mt-8 space-y-4 p-6" onSubmit={onSignin}>
+            <div>
+              <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-zinc-300">Email</label>
+              <input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required className="input"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }} />
+            </div>
+            <div>
+              <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-zinc-300">Password</label>
+              <input id="password" name="password" type="password" autoComplete="current-password" placeholder="••••••••" required className="input"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }} />
+            </div>
+            <button type="submit" disabled={loading} className="btn-primary w-full">
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-zinc-400">
+            Don&apos;t have an account?{' '}
+            <Link href="/accounts/signUp" className="font-medium text-white hover:text-amber-400 transition-colors">Create one</Link>
+          </p>
         </div>
-
       </div>
-
     </div>
   )
 }

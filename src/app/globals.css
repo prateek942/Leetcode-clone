@@ -2,27 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- Base ---------- */
+@layer base {
+	html {
+		color-scheme: dark;
+	}
+
+	body {
+		@apply bg-zinc-950 text-zinc-300 antialiased;
+		font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	}
+
+	::selection {
+		@apply bg-amber-400/30 text-white;
+	}
+}
+
+/* ---------- Reusable UI pieces ---------- */
+@layer components {
+	.btn-primary {
+		@apply inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:opacity-60;
+	}
+
+	.btn-secondary {
+		@apply inline-flex items-center justify-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-200 transition-colors hover:border-zinc-700 hover:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400;
+	}
+
+	.btn-icon {
+		@apply inline-flex h-8 w-8 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white;
+	}
+
+	.input {
+		@apply block w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 transition-colors focus:border-zinc-600 focus:outline-none focus:ring-2 focus:ring-amber-400/30;
+	}
+
+	.card {
+		@apply rounded-xl border border-zinc-800 bg-zinc-900/50;
+	}
+
+	.badge {
+		@apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset;
+	}
+
+	.nav-link {
+		@apply rounded-md px-3 py-1.5 text-sm text-zinc-400 transition-colors hover:bg-zinc-800/60 hover:text-white;
+	}
+}
+
+/* ---------- Split panes (react-split) ---------- */
 .split {
-    display: flex;
-    flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
 .gutter {
-    background-color: #eee;
-    background-repeat: no-repeat;
-    background-position: 50%;
+	background-color: #09090b;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	transition: background-color 150ms;
 }
 
-.gutter:hover{
-    background-color: #282828;
+.gutter:hover {
+	background-color: #f59e0b55;
 }
 
 .gutter.gutter-horizontal {
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-    cursor: col-resize;
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+	cursor: col-resize;
 }
 
-.gutter.gutter-horizontal ::-webkit-scrollbar{
+.gutter.gutter-horizontal ::-webkit-scrollbar {
 	width: 5px;
 }
 
@@ -31,58 +80,71 @@
 	cursor: row-resize;
 }
 
+/* ---------- Scrollbars ---------- */
 ::-webkit-scrollbar {
 	width: 0.5rem;
-	background-color: #282828;
+	height: 0.5rem;
+	background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
-	background: #282828;
+	background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #4d4d4d;
+	background: #3f3f46;
+	border-radius: 9999px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+	background: #52525b;
+}
+
+/* ---------- Problem description content ---------- */
 code {
 	border-radius: 5px;
 	border-width: 1px;
-	font-family: sans-serif;
-	font-size: 0.75rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 0.8rem;
 	font-weight: 500;
 	line-height: 1rem;
-	padding: 0.125rem;
-	letter-spacing: 1px;
+	padding: 0.1rem 0.3rem;
 	white-space: pre-wrap;
-	background-color: hsla(0, 0%, 100%, 0.07);
-	border-color: rgba(247, 250, 255, 0.12);
-	color: rgba(239, 241, 246, 0.75);
+	background-color: hsla(0, 0%, 100%, 0.06);
+	border-color: rgba(247, 250, 255, 0.1);
+	color: rgba(239, 241, 246, 0.85);
 }
 
-
 .example-card pre {
-	background-color: hsla(0, 0%, 100%, 0.1);
+	background-color: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.08);
 	border-radius: 0.5rem;
 	color: rgba(239, 241, 246, 0.75);
-	font-size: 0.98rem;
-	line-height: 1.25rem;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 0.875rem;
+	line-height: 1.4rem;
 	margin-bottom: 1rem;
-	margin-top: 1rem;
+	margin-top: 0.75rem;
 	padding: 1rem;
 	white-space: pre-wrap;
 }
 
 .example-card pre strong {
 	color: white;
-	font-size: 1rem;
+	font-size: 0.875rem;
 }
 
-
-
-.cm-scroller {
-	background-color: #282828 !important;
+/* ---------- Code editor ---------- */
+.cm-editor,
+.cm-scroller,
+.cm-gutters {
+	background-color: #18181b !important;
 }
+
+.cm-gutters {
+	border-right: 1px solid #27272a !important;
+}
+
 .cm-focused {
 	outline: none !important;
 }
-

@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import Logo from '@/assets/logo2.webp'
 import { FaChevronLeft, FaChevronRight, FaUserAlt } from 'react-icons/fa'
 import { PiSignOutBold } from "react-icons/pi";
@@ -39,7 +40,7 @@ const ProblemPageNavbar = ({ problems }: props) => {
     
     const handelSignOut = async ()=>{
         try {
-          const res = await axios.get('../../api/auth/signOut');
+          const res = await axios.get('/api/auth/signOut');
           if (res.status==200) {
             toast.success("Successfully logged Out",{
               position: "top-center",
@@ -56,41 +57,32 @@ const ProblemPageNavbar = ({ problems }: props) => {
 
 
     return (
-        <div>
-            <header className={`flex items-center justify-between text-gray-600 body-font px-10 py-3 bg-gradient-to-r from-zinc-800 to-slate-800 `} >
-                <div className="container mx-auto flex flex-col flex-wrap md:flex-row items-center">
-                    <div className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-                        <Image src={Logo} alt={''} className='w-6 h-6' />
-                    </div>
-                    <div className='flex items-center gap-4 flex-1 justify-center'>
-                        <div
-                            className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer hover:text-white'
-                            onClick={() => handleProblemChange(false)}
-                        >
-                            <FaChevronLeft size={20} />
-                        </div>
+        <header className='flex h-12 items-center justify-between gap-2 px-3 sm:px-4'>
+            <Link href='/accounts/dashboard' className='flex items-center gap-2'>
+                <Image src={Logo} alt='LeetCode logo' className='h-6 w-6' />
+            </Link>
 
-                        <p className='cursor-pointer hover:text-white'>Problems</p>
+            {/* Previous / next problem */}
+            <div className='flex items-center gap-1'>
+                <button className='btn-icon' onClick={() => handleProblemChange(false)} title='Previous problem'>
+                    <FaChevronLeft size={12} />
+                </button>
+                <span className='px-2 text-sm font-medium text-zinc-300'>Problems</span>
+                <button className='btn-icon' onClick={() => handleProblemChange(true)} title='Next problem'>
+                    <FaChevronRight size={12} />
+                </button>
+            </div>
 
-                        <div
-                            className='flex items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2 h-8 w-8 cursor-pointer hover:text-white'
-                            onClick={() => handleProblemChange(true)}
-                        >
-                            <FaChevronRight size={20} />
-                        </div>
-
-                    </div>
-                    <div className='h-8 w-8 flex items-center justify-center rounded text-white mr-5 cursor-pointer hover:bg-gray-400'>
-                        <FaUserAlt size={18} color={"white"} onClick={()=> router.push('../../accounts/dashboard')}/>
-                    </div>
-
-                    <Timer />
-                    <div className='h-8 w-8 flex items-center justify-center rounded cursor-pointer hover:bg-gray-400'>
-                        <button className='' onClick={handelSignOut}><PiSignOutBold size={24} color={"white"} /></button>
-                    </div>
-                </div>
-            </header>
-        </div>
+            <div className='flex items-center gap-1'>
+                <Timer />
+                <button className='btn-icon' onClick={() => router.push('../../accounts/dashboard')} title='Profile'>
+                    <FaUserAlt size={14} />
+                </button>
+                <button className='btn-icon' onClick={handelSignOut} title='Sign out'>
+                    <PiSignOutBold size={16} />
+                </button>
+            </div>
+        </header>
     )
 }
 

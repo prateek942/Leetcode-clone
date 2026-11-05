@@ -79,7 +79,7 @@ const ProblemDescription = ({ user, problems }: props) => {
         setLike((prevLike) => !prevLike);
 
         try {
-            const res = await axios.post('../../../api/handler/handelLikedproblems', {
+            const res = await axios.post('/api/handler/handelLikedproblems', {
                 like: !like, // Sending the updated like state
                 index: foundIndex,
                 user: user,
@@ -103,7 +103,7 @@ const ProblemDescription = ({ user, problems }: props) => {
         setDisLike((prevDisLike) => !prevDisLike);
 
         try {
-            const res = await axios.post('../../../api/handler/handelDisLikedproblems', {
+            const res = await axios.post('/api/handler/handelDisLikedproblems', {
                 disLike: !disLike, // Sending the updated like state
                 index: foundIndex,
                 user: user,
@@ -125,7 +125,7 @@ const ProblemDescription = ({ user, problems }: props) => {
         setFavorite((prevFavorite) => !prevFavorite);
 
         try {
-            const res = await axios.post('../../../api/handler/handelFavoritesproblems', {
+            const res = await axios.post('/api/handler/handelFavoritesproblems', {
                 favorite: !favorite,
                 index: foundIndex,
                 user: user,
@@ -137,108 +137,93 @@ const ProblemDescription = ({ user, problems }: props) => {
         }
     }
 
+    const difficultyStyles: Record<string, string> = {
+        Easy: 'text-emerald-400 bg-emerald-400/10 ring-emerald-400/20',
+        Medium: 'text-amber-400 bg-amber-400/10 ring-amber-400/20',
+        Hard: 'text-rose-400 bg-rose-400/10 ring-rose-400/20',
+    };
+    const userProblem = user?.problemList?.find((p: ProblemList) => p?._id === clickedProblemsId);
+
     return (
-        <div className='bg-slate-700'>
-            <div className='flex h-11 w-full items-center pt-2 bg-slate-600 text-white overflow-x-hidden overflow-y-auto'>
-                <div className={"bg-slate-700 rounded-t-[5px] px-5 py-[10px] text-xs cursor-pointer"}>
+        <div className='flex h-full flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900'>
+            {/* Tab bar */}
+            <div className='flex h-10 shrink-0 items-center border-b border-zinc-800 bg-zinc-900 px-2'>
+                <div className='flex items-center gap-2 rounded-md px-3 py-1 text-sm font-medium text-white'>
+                    <span className='h-1.5 w-1.5 rounded-full bg-amber-400' />
                     Description
                 </div>
-
             </div>
-            <div className='bg-slate-700'>
-                <div className='text-lg text-white p-5'>
+
+            <div className='flex-1 overflow-y-auto px-5 py-5'>
+                <h1 className='text-xl font-semibold tracking-tight text-white'>
                     {clickedProblems?.order}. {clickedProblems?.title}
-                </div>
-                {/* section 1 */}
-                <div className='flex items-center justify-start m-2'>
-                    <div className={`mx-4 px-4 py-1 w-15 rounded-full backdrop-blur-smtext-base
-                    ${(() => {
-                        const match = difficultyColors.find((d) => d.type === clickedProblems?.difficulty);
-                        return match ? match.bgColor + ' ' + match.textColor : '';
-                    })()}
-                     `} >
-                        {clickedProblems?.difficulty}
-                    </div>
-                    {/*  Solved Section  */}
-                    <div className='mx-2 cursor-pointer' >
-                    {user?.problemList.map((userProblem: ProblemList, index: any) => (
-                            <div key={index}>
-                                {userProblem?._id === clickedProblemsId ? (
-                                    userProblem?.solved ? (
-                                        <TiInputChecked size={30} color={'green'} />
-                                    ) : (
-                                        <ImCheckboxUnchecked size={20} color={'green'} />
-                                    )
-                                ) : (
-                                    '' // An empty string is rendered when the IDs don't match
-                                )}
-                            </div>
-                        ))}
+                </h1>
 
+                {/* Meta row: difficulty, status, reactions */}
+                <div className='mt-3 flex flex-wrap items-center gap-2'>
+                    {clickedProblems?.difficulty && (
+                        <span className={`badge ${difficultyStyles[clickedProblems.difficulty] || ''}`}>
+                            {clickedProblems.difficulty}
+                        </span>
+                    )}
+                    {userProblem && (
+                        <span className={`badge ${userProblem.solved
+                            ? 'text-emerald-400 bg-emerald-400/10 ring-emerald-400/20'
+                            : 'text-zinc-400 bg-zinc-800 ring-zinc-700'}`}>
+                            {userProblem.solved ? <><TiInputChecked size={14} className='mr-0.5' /> Solved</> : <><ImCheckboxUnchecked size={10} className='mr-1.5' /> Unsolved</>}
+                        </span>
+                    )}
+                    <div className='ml-1 flex items-center gap-0.5'>
+                        <button onClick={handelLikedproblems} className='btn-icon' title='Like'>
+                            {like ? <AiFillLike size={17} className='text-sky-400' /> : <AiOutlineLike size={17} />}
+                        </button>
+                        <button onClick={handelDisLikedproblems} className='btn-icon' title='Dislike'>
+                            {disLike ? <AiFillDislike size={17} className='text-rose-400' /> : <AiOutlineDislike size={17} />}
+                        </button>
+                        <button onClick={handelFavoritesproblems} className='btn-icon' title='Favorite'>
+                            {favorite ? <FaStar size={15} className='text-amber-400' /> : <FaRegStar size={15} />}
+                        </button>
                     </div>
-                    {/* Liked Section */}
-                    <div className='mx-2 flex cursor-pointer' >
-                        <div onClick={handelLikedproblems} >
-                            {like ? <AiFillLike size={20} color={'blue'} /> : <AiOutlineLike size={20} color={'blue'} />}
-                        </div>
-                        <span className='ml-2 cursor-pointer'>123</span>
-                    </div>
-                    {/* Disliked Section */}
-                    <div className='mx-2 flex cursor-pointer'>
-                        <div onClick={handelDisLikedproblems} >
-                            {disLike ? <AiFillDislike size={20} color={'red'} /> : <AiOutlineDislike size={20} color={'red'} />}
-                        </div>
+                </div>
 
-                        <span className='ml-2'>123</span>
-                    </div>
-                    {/* Favorite Section */}
-                    <div className='mx-3 cursor-pointer'>
-                        <div onClick={handelFavoritesproblems}>
-                            {favorite ? <FaStar size={20} color={'yellow'} /> : < FaRegStar size={20} color={'yellow'} />}
-                        </div>
-                    </div>
-                </div>
-                {/* section 2 */}
-                <div className='px-5 py-2 text-white'>
-                    {/* For HTML content Rendering */}
-                    <div dangerouslySetInnerHTML={{ __html: clickedProblems?.problemStatement || '' }} />
-                </div>
-                {/* section 3 */}
-                <div className='mt-4 px-5'>
+                {/* Statement (HTML content) */}
+                <div
+                    className='mt-5 space-y-3 text-[15px] leading-7 text-zinc-300 [&_p]:mb-3'
+                    dangerouslySetInnerHTML={{ __html: clickedProblems?.problemStatement || '' }}
+                />
+
+                {/* Examples */}
+                <div className='mt-6'>
                     {clickedProblems?.examples.map((examples, index) => (
-                        <div key={index} >
-                            <p className='font-medium text-white '>Example  {examples.id + 1}</p>
+                        <div key={index} className='mb-2'>
+                            <p className='text-sm font-semibold text-white'>Example {examples.id + 1}</p>
                             <div className='example-card'>
                                 <pre>
-                                    <strong className='text-white'>Input: </strong> {examples.inputText}
+                                    <strong>Input: </strong> {examples.inputText}
                                     <br />
                                     <strong>Output:</strong> {examples.outputText}
                                     <br />
-
                                     {examples.explanation && (
                                         <>
                                             <strong>Explanation: </strong> {examples.explanation}
                                         </>
                                     )}
-
                                 </pre>
                             </div>
                         </div>
-
                     ))}
-
-                </div>
-                <div className='px-5 py-2 text-white'>
-                    {clickedProblems?.constraints && (
-                        <>
-                            Constraints:<br />
-                            <strong>
-                                <div className='m-5' dangerouslySetInnerHTML={{ __html: clickedProblems?.constraints || '' }} />
-                            </strong>
-                        </>
-                    )}
                 </div>
 
+                {/* Constraints */}
+                {clickedProblems?.constraints && (
+                    <div className='mt-4 pb-6'>
+                        <p className='text-sm font-semibold text-white'>Constraints</p>
+                        <div
+                            className='mt-3 text-sm text-zinc-300 [&_li]:mb-2 [&_ul]:list-disc [&_ul]:pl-5'
+                            dangerouslySetInnerHTML={{ __html: clickedProblems?.constraints || '' }}
+                        />
+                    </div>
+                )}
             </div>
         </div>
     )

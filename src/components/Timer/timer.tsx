@@ -30,24 +30,23 @@ const Timer = () => {
 	}, [showTimer]);
 
     return (
-        <div >
-            {showTimer ? 
-                (<div className='h-8 flex items-center justify-center rounded mr-5 cursor-pointer  hover:bg-gray-400'>
-                    {/* <RiTimerFlashLine size={24} color={"white"}/> */}
-                    <div>{formatTime(time)}</div>
-					<RiTimerFlashLine size={24} color={"white"}
-						onClick={() => {
-							setShowTimer(false);
-							setTime(0);
-						}}
-					/>
-                </div>
+        <div>
+            {showTimer ? (
+                <button
+                    className='inline-flex h-8 items-center gap-2 rounded-md bg-zinc-800/70 px-2.5 font-mono text-sm text-amber-400 transition-colors hover:bg-zinc-800'
+                    title='Reset timer'
+                    onClick={() => {
+                        setShowTimer(false);
+                        setTime(0);
+                    }}
+                >
+                    {formatTime(time)}
+                    <RiTimerFlashLine size={16} />
+                </button>
             ) : (
-                <div className='h-8 w-8 flex items-center justify-center rounded mr-5 cursor-pointer  hover:bg-gray-400'>
-                    <MdAlarm size={24} color={"white"}
-                        onClick={() => setShowTimer(true)}
-                    />
-                </div>
+                <button className='btn-icon' title='Start timer' onClick={() => setShowTimer(true)}>
+                    <MdAlarm size={17} />
+                </button>
             )}
         </div>
     )

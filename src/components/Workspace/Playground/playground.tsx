@@ -62,7 +62,7 @@ const Playground = ({ user, problems, setSuccess}: props) => {
   const handleRun = async() => {
     try {
       localStorage.setItem(`code -${clickedProblems?.id}`, JSON.stringify(userCode));  // Set the code into local storage
-      const res= await axios.post("../../../api/languages/python/run",{
+      const res= await axios.post("/api/languages/python/run",{
         code : JSON.parse(JSON.stringify(userCode)),
       });
 
@@ -97,7 +97,7 @@ const Playground = ({ user, problems, setSuccess}: props) => {
       const ids = user?.problemList.map((prob: any) => prob?._id);
       const foundIndex = ids.indexOf(clickedProblemsId);
       
-      const res= await axios.post("../../../api/languages/python/submit",{
+      const res= await axios.post("/api/languages/python/submit",{
         user : user,
         index: foundIndex,
         code : JSON.parse(JSON.stringify(userCode)),
@@ -128,75 +128,73 @@ const Playground = ({ user, problems, setSuccess}: props) => {
   }
 
 
+  const isError = output?.startsWith('Error');
+
   return (
-    <div className='bg-slate-700'>
+    <div className='flex h-full flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900'>
       <Navbar />
-      <Split className="h-[100vh] " direction="vertical" sizes={[60, 40]} minSize={150}>
-        <div className='w-full h-[60%] overflow-auto bg-zinc-900'>
+      <Split className="min-h-0 flex-1" direction="vertical" sizes={[60, 40]} minSize={100} gutterSize={6}>
+        <div className='w-full overflow-auto bg-zinc-900'>
           <CodeMirror
             value={userCode}
             theme={vscodeDark}
             onChange={handleCodeChange}
             extensions={[python()]}
             style={
-              { fontSize: "16px" }
+              { fontSize: "14px" }
             }
           />
         </div>
 
         {/* testcase section */}
-        <div className='w-full h-[40%] px-5 overflow-auto'>
-          <div className='flex h-10 items-center space-x-6'>
-            <div className='relative flex h-full flex-col justify-center cursor-pointer'>
-              <div className='text-sm font-medium leading-5 text-white'>Testcases</div>
-              <hr className='absolute bottom-0 h-0.5 w-full rounded-full border-none bg-white' />
+        <div className='w-full overflow-auto border-t border-zinc-800 px-4 pb-4'>
+          <div className='flex h-10 items-center'>
+            <div className='relative flex h-full items-center text-sm font-medium text-white'>
+              Testcases
+              <span className='absolute bottom-0 h-0.5 w-full rounded-full bg-amber-400' />
             </div>
           </div>
-          <div className='flex'>
+          <div className='mt-3 flex flex-wrap gap-2'>
             {clickedProblems?.examples.map((example, index) => (
-              <div
-                className='mr-2 items-start mt-2 '
+              <button
                 key={example.id}
                 onClick={() => setActiveTestCaseId(index)}
+                className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${activeTestCaseId === index
+                  ? 'bg-zinc-700 text-white'
+                  : 'bg-zinc-800/60 text-zinc-400 hover:bg-zinc-800 hover:text-white'}`}
               >
-                <div className='flex flex-wrap items-center gap-y-4'>
-                  <div
-                    className={`font-medium items-center transition-all focus:outline-none inline-flex bg-slate-800 hover:bg-slate-500 relative rounded-lg px-4 py-1 cursor-pointer whitespace-nowrap
-										text-white
-									`}
-                  >
-                    Case {index + 1}
-                  </div>
-                </div>
-              </div>
+                Case {index + 1}
+              </button>
             ))}
           </div>
 
-          <div className='font-semibold my-4'>
-            <p className='text-sm font-medium mt-4 text-white'>Input:</p>
-            <div className='w-full cursor-text rounded-lg border px-3 py-[10px] bg-gray-600 border-transparent text-white mt-2'>
-              {clickedProblems?.examples[activeTestCaseId].inputText}
+          <div className='mt-4 space-y-3'>
+            <div>
+              <p className='text-xs font-medium text-zinc-500'>Input</p>
+              <div className='mt-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 font-mono text-sm text-zinc-200'>
+                {clickedProblems?.examples[activeTestCaseId].inputText}
+              </div>
             </div>
-            <p className='text-sm font-medium mt-4 text-white'>Output:</p>
-            <div className='w-full cursor-text rounded-lg border px-3 py-[10px] bg-gray-600 border-transparent text-white mt-2'>
-              {clickedProblems?.examples[activeTestCaseId].outputText}
+            <div>
+              <p className='text-xs font-medium text-zinc-500'>Expected output</p>
+              <div className='mt-1.5 rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 font-mono text-sm text-zinc-200'>
+                {clickedProblems?.examples[activeTestCaseId].outputText}
+              </div>
             </div>
+            {output && (
+              <div>
+                <p className={`text-xs font-medium ${isError ? 'text-rose-400' : 'text-emerald-400'}`}>Result</p>
+                <div className={`mt-1.5 whitespace-pre-wrap rounded-md border px-3 py-2 font-mono text-sm ${isError
+                  ? 'border-rose-500/20 bg-rose-500/5 text-rose-200'
+                  : 'border-emerald-500/20 bg-emerald-500/5 text-emerald-100'}`}>
+                  {output}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Split>
-      <div className='flex justify-center items-center bg-slate-700 '>
-        <UserConsole handleRun={handleRun} handleSubmit={handleSubmit} output={output} />
-
-      </div>
-      {output && <>
-        <div className='flex justify-center items-center text-white '>
-          <div className='w-[95%] bg-[hsla(0,0%,100%,0.1)] text-[rgba(239,241,246,0.75)] text-[0.98rem] leading-5 whitespace-pre-wrap my-4 p-4 rounded-lg'>
-            {output}
-
-          </div>
-        </div>
-      </>} 
-
+      <UserConsole handleRun={handleRun} handleSubmit={handleSubmit} output={output} />
     </div>
   )
 }

@@ -1,33 +1,24 @@
 import React from 'react'
-import {BsFacebook, BsTwitter, BsInstagram, BsLinkedin} from 'react-icons/bs'
-
+import { BsGithub, BsLinkedin } from 'react-icons/bs'
 
 const Footer = () => {
     return (
-        <div className='bg-gradient-to-r from-zinc-800 to-slate-800'>
-            <footer className="text-gray-600 body-font">
-                <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-                    
-                    <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2025 LeetCode —
-                        <a href="https://twitter.com/" className="text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@Prateek Kumar Pandey</a>
-                    </p>
-                    <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-                        <a className="text-gray-500">
-                            <BsFacebook size={20} color='white'/>
-                        </a>
-                        <a className="ml-3 text-gray-500">
-                            <BsTwitter size={20} color='white'/>
-                        </a>
-                        <a className="ml-3 text-gray-500">
-                            <BsInstagram size={20} color='white'/>
-                        </a>
-                        <a className="ml-3 text-gray-500">
-                            <BsLinkedin size={20} color='white'/>
-                        </a>
-                    </span>
+        <footer className="border-t border-zinc-800/80 bg-zinc-950">
+            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6">
+                <p className="text-sm text-zinc-500">
+                    © 2025 LeetCode Clone · Built by
+                    <a href="https://twitter.com/" className="ml-1 text-zinc-300 transition-colors hover:text-white" rel="noopener noreferrer" target="_blank">Prateek Kumar Pandey</a>
+                </p>
+                <div className="flex items-center gap-1">
+                    <a href="https://github.com/" className="btn-icon" rel="noopener noreferrer" target="_blank" aria-label="GitHub">
+                        <BsGithub size={16} />
+                    </a>
+                    <a href="https://www.linkedin.com/" className="btn-icon" rel="noopener noreferrer" target="_blank" aria-label="LinkedIn">
+                        <BsLinkedin size={16} />
+                    </a>
                 </div>
-            </footer>
-        </div>
+            </div>
+        </footer>
     )
 }
 

@@ -30,7 +30,7 @@ const ProblemPage = () => {
 
 
   return (
-    <div>
+    <div className='min-h-screen bg-zinc-950'>
       <Navbar problems={problems} />
       <Workspace users={users} problems={problems} />
     </div>

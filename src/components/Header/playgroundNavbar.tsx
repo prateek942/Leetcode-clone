@@ -31,34 +31,16 @@ const PlaygroundNavbar = () => {
     }, [isFullScreen]);
 
     return (
-        <div className='flex items-center justify-between bg-slate-700 h-11 w-full '>
-            <div className='flex items-center text-white'>
-                <button className='flex cursor-pointer items-center ml-2 rounded focus:outline-none bg-slate-600 text-dark-label-2 hover:bg-slate-400  px-2 py-1.5 font-medium'>
-                    <div className='flex items-center px-1'>
-                        <div className='text-xs text-label-2 dark:text-dark-label-2'>Python</div>
-                    </div>
-                </button>
+        <div className='flex h-10 w-full shrink-0 items-center justify-between border-b border-zinc-800 bg-zinc-900 px-2'>
+            <div className='flex items-center gap-2 px-2 text-sm font-medium text-white'>
+                <span className='text-amber-400 font-mono text-xs'>{'</>'}</span>
+                Code
+                <span className='badge ml-1 bg-zinc-800 text-zinc-300 ring-zinc-700'>Python</span>
             </div>
 
-            <div className='flex items-center m-2'>
-                <button
-                    className='relative rounded px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex  ml-auto p-1 mr-2 hover:bg-dark-fill-3'
-                // onClick={() => setSettings({ ...settings, settingsModalIsOpen: true })}
-                >
-                    <div className='h-4 w-4 font-bold text-lg'>
-                        <AiOutlineSetting />
-                    </div>
-                    
-                </button>
-
-                <button className='relative rounded px-3 py-1.5 font-medium items-center transition-all focus:outline-none inline-flex  ml-auto p-1 mr-2 hover:bg-dark-fill-3' onClick={handleFullScreen}>
-                    <div className='h-4 w-4 font-bold text-lg'>
-                        {!isFullScreen ? <AiOutlineFullscreen /> : <AiOutlineFullscreenExit />}
-                    </div>
-                    
-                </button>
-            </div>
-            {/* {settings.settingsModalIsOpen && <SettingsModal settings={settings} setSettings={setSettings} />} */}
+            <button className='btn-icon' onClick={handleFullScreen} title={isFullScreen ? 'Exit full screen' : 'Full screen'}>
+                {!isFullScreen ? <AiOutlineFullscreen size={16} /> : <AiOutlineFullscreenExit size={16} />}
+            </button>
         </div>
     );
 }

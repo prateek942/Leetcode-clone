@@ -29,9 +29,9 @@ const Workspace = ({ users, problems }: props) => {
 	  }, [success]);
 	
 	return (
-		<Split className='split' minSize={400}>
+		<Split className='split h-[calc(100vh-3rem)] p-2 pt-0' minSize={400} gutterSize={8}>
 			<ProblemDescription user={users} problems={problems} />
-			<div className='bg-slate-700'>
+			<div className='h-full'>
 				<Playground user={users} problems={problems} setSuccess={setSuccess} />
 				{success && <Confetti gravity={0.3} tweenDuration={5000} width={width - 1} height={height - 1} />}
 			</div>

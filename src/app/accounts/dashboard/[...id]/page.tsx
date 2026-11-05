@@ -4,144 +4,130 @@ import React, { useEffect, useState } from 'react'
 import AcountNavbar from '@/components/Header/acountNavbar'
 import { IoSearch } from "react-icons/io5";
 import { AiOutlineSolution } from "react-icons/ai";
-import { ImYoutube2 } from "react-icons/im";
-import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
+import { BsYoutube, BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import { useRouter } from 'next/navigation';
 import { Users, ProblemList } from '@/helpers/type';
+
+// Badge styles for each difficulty level
+const difficultyStyles: Record<string, string> = {
+    Easy: 'text-emerald-400 bg-emerald-400/10 ring-emerald-400/20',
+    Medium: 'text-amber-400 bg-amber-400/10 ring-amber-400/20',
+    Hard: 'text-rose-400 bg-rose-400/10 ring-rose-400/20',
+};
 
 const DashboardPage = ({ params }: any) => {
 
     const router = useRouter();
     const [problems, setProblems] = useState([]);
     const [user, setUser] = useState<Users>();
-    const [difficultyColors, setDifficultyColor] = useState([
-        {
-            type: 'Hard',
-            color: 'text-red-500',
-        },
-        {
-            type: 'Medium',
-            color: 'text-orange-400',
-        },
-        {
-            type: 'Easy',
-            color: 'text-lime-400',
-        },
-    ]);
+    const [searchText, setSearchText] = useState('');
 
     const getData = async () => {
         try {
             const problemSet = await axios.get('../../api/utils/problemSets');
             setProblems(problemSet.data.data);
-            
 
             const user = await axios.get('../../api/utils/verifiedUserDetails');
             setUser(user.data.user);
-
-           
-
         } catch (error) {
             console.log(error);
         }
-
     }
 
     useEffect(() => {
         getData();
     }, [])
 
-    return (
-        <div>
-            <AcountNavbar colour={"bg-gradient-to-r from-zinc-800 to-slate-800"} hoverColour={"white"} />
+    const filteredProblems = problems.filter((problem: any) =>
+        problem.title?.toLowerCase().includes(searchText.toLowerCase())
+    );
 
-            <div className="p-10">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <div className="p-4 bg-white dark:bg-gray-900">
-                        <label htmlFor="table-search" className="sr-only">Search</label>
-                        <div className="relative mt-1">
-                            <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <IoSearch color={'white'} />
-                            </div>
-                            <input type="text" id="table-search" className="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for items" />
-                        </div>
+    return (
+        <div className="min-h-screen bg-zinc-950">
+            <AcountNavbar />
+
+            <main className="mx-auto max-w-6xl px-4 sm:px-6 py-10">
+                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight text-white">Problems</h1>
+                        <p className="mt-1 text-sm text-zinc-400">
+                            {user ? `Welcome back, ${user.username}. ` : ''}Pick a problem and start coding.
+                        </p>
                     </div>
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <div className="relative w-full sm:w-72">
+                        <label htmlFor="table-search" className="sr-only">Search</label>
+                        <IoSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+                        <input
+                            type="text"
+                            id="table-search"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            className="input pl-9"
+                            placeholder="Search problems"
+                        />
+                    </div>
+                </div>
+
+                <div className="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+                    <table className="w-full text-sm text-left text-zinc-400">
+                        <thead className="border-b border-zinc-800 text-xs font-medium uppercase tracking-wider text-zinc-500">
                             <tr>
-                                <th scope="col" className="p-4">
-                                    Status
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Problem Title
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Difficulty
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Category
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Solution
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Video Solution
-                                </th>
+                                <th scope="col" className="px-5 py-3 w-16">Status</th>
+                                <th scope="col" className="px-5 py-3">Title</th>
+                                <th scope="col" className="px-5 py-3">Difficulty</th>
+                                <th scope="col" className="px-5 py-3 hidden md:table-cell">Category</th>
+                                <th scope="col" className="px-5 py-3 hidden sm:table-cell">Solution</th>
+                                <th scope="col" className="px-5 py-3 hidden sm:table-cell">Video</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {problems.map((problem: any, index) => (
-                                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td className="w-4 p-4">
-                                        {/* status show */}
-                                        <div>
-                                            {user?.problemList.map((userProblem: ProblemList, index) => (
-                                                <div key={index}>
-                                                    {userProblem._id === problem._id ? (
-                                                        userProblem.solved ? (
-                                                            <ImCheckboxChecked size={20} color={'green'}/>
-                                                        ) : (
-                                                            <ImCheckboxUnchecked size={20} color={'green'}/>
-                                                        )
-                                                    ) : (
-                                                        ''
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </td>
-                                    <th scope="row" className="px-6 py-4 hover:text-cyan-400 hover:cursor-pointer font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <div onClick={() => {
-                                            router.push(`/accounts/problems/${problem.id}`);
-                                        }}>
-                                            {problem.order}. {problem.title}
-                                        </div>
-                                    </th>
-                                    <td className={`px-6 py-4 ${(() => {
-                                        const match = difficultyColors.find((d) => d.type === problem.difficulty);
-                                        return match ? match.color : '';
-                                    })()}`}>
-                                        <div className='hover:cursor-pointer'>
-                                            {problem.difficulty}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {problem.category}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {/* {problem.solution} */}
-                                        <AiOutlineSolution color={'blue'} size={24} />
-                                    </td>
-                                    <td className="px-6 py-4 flex justify-between">
-                                        <a href={`https://www.youtube.com/${problem.videoId}`}><ImYoutube2 color={'red'} size={35} /></a>
-                                    </td>
-                                </tr>
-                            ))}
-
-
+                        <tbody className="divide-y divide-zinc-800/70">
+                            {filteredProblems.map((problem: any, index) => {
+                                const userProblem = user?.problemList.find((p: ProblemList) => p._id === problem._id);
+                                return (
+                                    <tr key={index} className="transition-colors hover:bg-zinc-800/40">
+                                        <td className="px-5 py-4">
+                                            {userProblem && (userProblem.solved
+                                                ? <BsCheckCircleFill size={16} className="text-emerald-400" title="Solved" />
+                                                : <BsCircle size={16} className="text-zinc-600" title="Attempted" />)}
+                                        </td>
+                                        <th scope="row" className="px-5 py-4 font-medium text-zinc-100 whitespace-nowrap">
+                                            <button
+                                                className="text-left transition-colors hover:text-amber-400"
+                                                onClick={() => router.push(`/accounts/problems/${problem.id}`)}
+                                            >
+                                                {problem.order}. {problem.title}
+                                            </button>
+                                        </th>
+                                        <td className="px-5 py-4">
+                                            <span className={`badge ${difficultyStyles[problem.difficulty] || 'text-zinc-400 bg-zinc-800 ring-zinc-700'}`}>
+                                                {problem.difficulty}
+                                            </span>
+                                        </td>
+                                        <td className="px-5 py-4 hidden md:table-cell">{problem.category}</td>
+                                        <td className="px-5 py-4 hidden sm:table-cell">
+                                            <AiOutlineSolution size={18} className="text-sky-400" />
+                                        </td>
+                                        <td className="px-5 py-4 hidden sm:table-cell">
+                                            <a
+                                                href={`https://www.youtube.com/${problem.videoId}`}
+                                                className="inline-flex text-zinc-500 transition-colors hover:text-red-500"
+                                                aria-label="Video solution"
+                                            >
+                                                <BsYoutube size={20} />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
+                    {filteredProblems.length === 0 && (
+                        <p className="py-12 text-center text-sm text-zinc-500">
+                            {problems.length === 0 ? 'Loading problems...' : 'No problems match your search.'}
+                        </p>
+                    )}
                 </div>
-            </div>
+            </main>
         </div>
     )
 }

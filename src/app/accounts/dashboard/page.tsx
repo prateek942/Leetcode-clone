@@ -15,7 +15,7 @@ const Page = () => {
 
   const getUser = async () => {
     try {
-      const res = await axios.get('../../api/utils/verifiedUserDetails');
+      const res = await axios.get('/api/utils/verifiedUserDetails');
       setUser(res.data.user);
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -29,7 +29,7 @@ const Page = () => {
 
   const handelSignOut = async ()=>{
     try {
-      const res = await axios.get('../../api/auth/signOut');
+      const res = await axios.get('/api/auth/signOut');
       if (res.status==200) {
         toast.success("Successfully logged Out",{
           position: "top-center",
@@ -47,78 +47,64 @@ const Page = () => {
 
   if (loading) {
     return (
-      <div>
-        <Navbar colour={"bg-gradient-to-r from-zinc-800 to-slate-800"} hoverColour={"black"} />
-        <div className="flex justify-center items-center min-h-screen">
-          <p className="text-gray-500 text-lg">Loading...</p>
+      <div className="min-h-screen bg-zinc-950">
+        <Navbar />
+        <div className="flex justify-center items-center py-40">
+          <p className="text-sm text-zinc-500">Loading...</p>
         </div>
       </div>
     );
   }
 
+  const stats = [
+    { label: 'Solved', value: user?.totalSolved },
+    { label: 'Likes', value: user?.totalLikes },
+    { label: 'Dislikes', value: user?.totalDisLikes },
+  ];
+
   return (
-    <div>
-      <Navbar colour={"bg-gradient-to-r from-zinc-800 to-slate-800"} hoverColour={"black"} />
-      <div className="p-16">
-        <div className="p-8 bg-white shadow mt-24">
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            <div className="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
-              <div>
-                <p className="font-bold text-gray-700 text-xl">{user?.totalSolved?.toString()}</p>
-                <p className="text-gray-400">Solve Problem</p>
+    <div className="min-h-screen bg-zinc-950">
+      <Navbar />
+      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="card overflow-hidden">
+          <div className="h-24 border-b border-zinc-800 bg-[radial-gradient(ellipse_at_top_left,rgba(245,158,11,0.15),transparent_60%)]" />
+          <div className="px-6 pb-8 sm:px-8">
+            <div className="-mt-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+              <div className="flex items-end gap-4">
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900 text-zinc-400 shadow-xl">
+                  <CgProfile size={44} />
+                </div>
+                <div className="pb-1">
+                  <h1 className="text-xl font-semibold tracking-tight text-white">{user?.username}</h1>
+                  <p className="text-sm text-zinc-400">{user?.email}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-bold text-gray-700 text-xl">{user?.totalLikes?.toString()}</p>
-                <p className="text-gray-400">Likes</p>
-              </div>
-              <div>
-                <p className="font-bold text-gray-700 text-xl">{user?.totalDisLikes?.toString()}</p>
-                <p className="text-gray-400">DisLikes</p>
+              <div className="flex gap-2">
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    router.push(`/accounts/dashboard/${user?._id}`);
+                  }}
+                >
+                  View problems
+                </button>
+                <button className="btn-secondary" onClick={handelSignOut}>
+                  Sign out
+                </button>
               </div>
             </div>
-            <div className="relative">
-              <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
-                <CgProfile size={100} />
 
-              </div>
-            </div>
-
-            <div className="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-              <button
-                className="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
-                onClick={()=>{
-                  router.push(`/accounts/dashboard/${user?._id}`);
-                }}
-              >
-                Dashboard
-              </button>
-              <button
-                className="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
-                onClick={handelSignOut}
-              >
-                SignOut
-              </button>
+            <div className="mt-8 grid grid-cols-3 gap-3">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-lg border border-zinc-800 bg-zinc-950/60 p-4">
+                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">{stat.label}</p>
+                  <p className="mt-1 text-2xl font-semibold text-white">{stat.value?.toString() ?? '0'}</p>
+                </div>
+              ))}
             </div>
           </div>
-
-          <div className="mt-20 text-center border-b pb-12">
-            <h1 className="text-4xl font-medium text-gray-700">{user?.username}</h1>
-
-
-            <p className="mt-8 text-gray-500">Email - {user?.email}</p>
-            <p className="mt-2 text-gray-500">Computer Science</p>
-          </div>
-
-          <div className="mt-12 flex flex-col justify-center">
-            <p className="text-gray-600 text-center font-light lg:px-16">Made By - Prateek Kumar Pandey 
-            <br/>
-            eat {`->`} code {`->`} sleep
-            </p>
-           
-          </div>
-
         </div>
-      </div>
+      </main>
     </div>
   )
 }
