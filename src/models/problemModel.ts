@@ -57,6 +57,10 @@ const problemSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      testCase: {
+        input: [String],
+        output: [String],
+      },
 });
 
 
@@ -71,6 +75,7 @@ try {
 
 //actions
 export const getProblems = () => problemModel.find();
+export const createProblem = (values: Record<string, any>) => new problemModel(values).save().then((problem: any) => problem.toObject());
 // export const getProblemByEmail = (email : string) => problemModel.findOne({email});
 // export const getProblemBySessionToken = (sessionToken :string) => problemModel.findOne({"authentication.sessionToken" : sessionToken});
 // export const getProblemById = (id : string) => problemModel.findById(id);
